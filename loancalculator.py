@@ -22,9 +22,9 @@ def add_custom_title_style():
         .title-formal{
             font-family: 'Arial', sans-serif;
             font-size: 40px;
-            color: #2E86C1; 
+            color: white; 
             text-align: center;
-            margin-bottom: 60px
+            margin: 20px
         }
         </style><br><br>
         """,
