@@ -56,7 +56,7 @@ def add_sidebar_footer_email():
 
 def run():
     add_custom_title_style()
-    st.markdown('<h1 class="title-formal">Predict Approval of your Loan</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="title-formal">Predict Approval of your Loan</h1><br>', unsafe_allow_html=True)
     # Sidebar
     st.sidebar.markdown('<h2 class="title-stylish">Your Banking Partner!</h2>', unsafe_allow_html=True)
     st.sidebar.markdown(
