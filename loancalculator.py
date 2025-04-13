@@ -2,7 +2,8 @@ import joblib
 import streamlit as st
 import pandas as pd
 import numpy as np
-
+import warnings
+warnings.filterwarnings("ignore")
 
 model_columns = joblib.load('./models/model_columns.pkl')
 model = joblib.load('./models/feature_model.pkl')
@@ -116,36 +117,47 @@ def run():
         if loan_term == 0 and loan_amount > 0:
           st.error("Loan Term must be greater than 0 if a Loan Amount is added.")
           return
+        
+        if education=='Not Graduate':
+           education=True
+        else:
+           education=False
+        if self_employed=='Yes':
+           self_employed=True
+        else:
+           self_employed=False
+        
         user_input = {
     'no_of_dependents': no_of_dependents, 
-    'education': education,
-    'self_employed':self_employed, 
-    'income_annum':income_annum,
+    'income_annum': income_annum,
     'loan_amount':loan_amount, 
-    'loan_term':loan_term, 
+    'loan_term':loan_term,
     'cibil_score':cibil_score, 
-    'residential_assets_value':residential_assets_value,
+    'residential_assets_value':residential_assets_value, 
     'commercial_assets_value':commercial_assets_value, 
-    'luxury_assets_value':luxury_assets_value, 
-    'bank_asset_value':bank_asset_value,
+    'luxury_assets_value':luxury_assets_value,
+    'bank_asset_value':bank_asset_value, 
+    'education_NotGraduate':education, 
+    'self_employed_Yes':self_employed,
         }
         print(f"user_input: {user_input}")
         input_df = pd.DataFrame(user_input,index=range(0,1))
         input_encoded = pd.get_dummies(input_df)
 
         # Reindex to match training columns (fill missing columns with 0)
-        input_encoded = input_encoded.reindex(columns=model_columns, fill_value=0)
+        # input_encoded = input_encoded.reindex(columns=model_columns, fill_value=0)
         prediction=model.predict(input_encoded)
         pred_prob = model.predict_proba(input_encoded.values.reshape(1, -1))
         success_container = st.container()
+        print(prediction,pred_prob)
         with success_container:
-             if prediction[0]:
+             if prediction[0]==False:
               st.markdown(
         """
         <div style="background-color: #d4edda; padding: 10px; border-radius: 5px; color: #155724;">
             <strong>There is a {:.2f}% chance for your loan to get approved.</strong><br>
         </div><br>
-        """.format(pred_prob[0][1] * 100),
+        """.format(pred_prob[0][0] * 100),
         unsafe_allow_html=True,
     )
              else:
@@ -154,7 +166,7 @@ def run():
         <div style="background-color: #f8d7da; padding: 10px; border-radius: 5px; color: #721c24;">
             <strong>There is a  {:.2f}% chance for your loan to get rejected.<br>
         </div><br>
-        """.format(pred_prob[0][0] * 100),
+        """.format(pred_prob[0][1] * 100),
         unsafe_allow_html=True,
     )
         if st.button("Close", key="close_success"):
