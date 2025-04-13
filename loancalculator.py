@@ -111,9 +111,9 @@ def run():
         if loan_amount == 0:
           st.error("Please fill out loan_amount field.")
           return
-        if loan_amount > bank_asset_value:
-          st.error("Loan Amount cannot exceed Bank Asset Value.")
-          return
+        # if loan_amount > bank_asset_value:
+        #   st.error("Loan Amount cannot exceed Bank Asset Value.")
+        #   return
         if loan_term == 0 and loan_amount > 0:
           st.error("Loan Term must be greater than 0 if a Loan Amount is added.")
           return
